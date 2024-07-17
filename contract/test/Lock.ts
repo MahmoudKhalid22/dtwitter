@@ -11,7 +11,8 @@ describe("Lock", function () {
     const DTwitter = await ethers.getContractFactory("DTwitter");
     const [user1, user2] = await ethers.getSigners();
     const dtwitter = await DTwitter.deploy();
-    // await dtwitter.deployed();
+    await dtwitter.target;
+    // await dtwitter.deleteAllAccounts();
 
     await dtwitter.signup(
       "Mahmoud Khalid",
@@ -28,6 +29,7 @@ describe("Lock", function () {
     console.log("Signing up with the first account Me (mahmoud)");
 
     const userFromAddress = await dtwitter.getUser(user1.address);
+    // console.log(userFromAddress);
     expect(userFromAddress.name).to.equal("Mahmoud Khalid");
     expect(userFromAddress.avatar).to.equal("some url");
     expect(userFromAddress.bio).to.equal("A web3 Software Engineer");
@@ -46,5 +48,11 @@ describe("Lock", function () {
     ).to.be.revertedWith("username is taken, try another one.");
 
     console.log("username is taken error");
+    // await dtwitter.deleteAllAccounts();
+
+    await dtwitter.postTweet("Hello Dwitter");
+    const dweets = await dtwitter.dweets(0);
+    console.log(dweets);
+    expect(dweets.content).to.equal("Hello Dwitter");
   });
 });
